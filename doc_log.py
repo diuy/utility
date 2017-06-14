@@ -26,7 +26,7 @@ for line in file:
     if "druggist match succeed" in line:
         s = re.findall(r"business_id:\d+", line)[0]
         bid = s.split(":")[1]
-        time = re.findall(r"\d{4}/\d{1,2}/\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}", line)[0]
+        time = re.findall(r"\d{4}/\d{1,2}/\d{1,2} .* \d{1,2}:\d{1,2}:\d{1,2}", line)[0]
         s = re.findall(r"proxy_server_ip:\S+", line)[0]
         ip = s.split(":")[1]
         s = re.findall(r"proxy_server_port:\d+", line)[0]
