@@ -20,8 +20,10 @@ else:
 
 file = open(filePath, mode="r", encoding="UTF-8")
 infos = []
+line_re = re.compile(r".*business_id:\d+.*client_send_packet_num:\d+.*c_audio:\d+.*p_audio:\d+.*");
 for line in file:
-    if "client_send_packet_num" in line:
+    if line_re.match(line):
+        # if r"business_id:\d+.*client_send_packet_num:\d+.*c_audio\d+.*p_audio:\d+.*" in line:
         s = re.findall(r"business_id:\d+", line)[0]
         bid = s.split(":")[1]
         time = re.findall(r"\d{2}:\d{2}:\d{2}", line)[0]
@@ -46,7 +48,7 @@ for info in infos:
         diff = (c_audio - p_audio) / c_audio
     elif p_audio > c_audio:
         diff = (p_audio - c_audio) / p_audio
-    diff = 1-diff
+    diff = 1 - diff
     if diff < 0.6:
         e = "****"
     elif diff < 0.7:
