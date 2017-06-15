@@ -20,7 +20,9 @@ else:
 
 file = open(filePath, mode="r", encoding="UTF-8")
 infos = []
-line_re = re.compile(r".*business_id:\d+.*client_send_packet_num:\d+.*c_audio:\d+.*p_audio:\d+.*");
+line_re = re.compile(
+    r".*business_id:\d+.*client_send_packet_num:\d+.*druggist_send_packet_num:\d+.*c_audio:\d+.*frame:\d+.*"
+    r"p_audio:\d+.*frame:\d+.*")
 for line in file:
     if line_re.match(line):
         # if r"business_id:\d+.*client_send_packet_num:\d+.*c_audio\d+.*p_audio:\d+.*" in line:
@@ -33,13 +35,17 @@ for line in file:
         druggist_send_packet_num = s.split(":")[1]
         s = re.findall(r"c_audio:\d+", line)[0]
         c_audio = s.split(":")[1]
+        s = re.findall(r"c_audio:\d+,frame:\d+", line)[0]
+        c_frame = s.split(":")[2]
         s = re.findall(r"p_audio:\d+", line)[0]
         p_audio = s.split(":")[1]
-        infos.append((time, bid, client_send_packet_num, druggist_send_packet_num, c_audio, p_audio))
+        s = re.findall(r"p_audio:\d+,frame:\d+", line)[0]
+        p_frame = s.split(":")[2]
+        infos.append((time, bid, client_send_packet_num, druggist_send_packet_num, c_audio, c_frame, p_audio, p_frame))
 file.close()
 
 file = open(os.path.splitext(filePath)[0] + ".csv", mode="w", encoding="GBK")
-file.writelines("time,id,client_send,druggist_send,c_audio,p_audio\n")
+file.writelines("time,id,client_send,druggist_send,c_audio,c_frame,p_audio,p_frame\n")
 for info in infos:
     c_audio = int(info[4])
     p_audio = int(info[5])
@@ -60,6 +66,6 @@ for info in infos:
     else:
         e = ""
     file.writelines(
-        "%s,%s,%s,%s,%s,%s,%s\n" % (info[0], info[1], info[2], info[3], info[4], info[5], e))
+        "%s,%s,%s,%s,%s,%s,%s,%s,%s\n" % (info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], e))
 
 file.close()
