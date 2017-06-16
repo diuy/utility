@@ -46,15 +46,22 @@ file.close()
 
 file = open(os.path.splitext(filePath)[0] + ".csv", mode="w", encoding="GBK")
 file.writelines("time,id,client_send,druggist_send,c_audio,c_frame,p_audio,p_frame\n")
+
+
+def get_diff(x, y):
+    d = 0
+    if x > y:
+        d = (x - y) / x
+    elif y > x:
+        d = (y - x) / y
+    return d
+
+
 for info in infos:
     c_audio = int(info[4])
-    p_audio = int(info[5])
-    diff = 0
-    if c_audio > p_audio:
-        diff = (c_audio - p_audio) / c_audio
-    elif p_audio > c_audio:
-        diff = (p_audio - c_audio) / p_audio
-    diff = 1 - diff
+    p_audio = int(info[6])
+    diff = get_diff(c_audio, p_audio)
+    diff = 1-diff
     if diff < 0.6:
         e = "****"
     elif diff < 0.7:
